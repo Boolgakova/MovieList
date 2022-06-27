@@ -1,10 +1,16 @@
 package ru.netology.manager;
 
 import ru.netology.domain.MovieItem;
+import ru.netology.repository.MovieRepository;
 
 public class MovieManager {
-    private MovieItem[] items = new MovieItem[0];
-    private int limit;
+    private MovieRepository repo;
+
+    public MovieManager(MovieRepository repo) {
+        this.repo = repo;
+    }
+
+    private int limit = 10;
 
     public int getLimit() {
         return limit;
@@ -14,30 +20,13 @@ public class MovieManager {
         this.limit = limit;
     }
 
-    public MovieManager(int limit) {
+    public MovieManager(MovieRepository repo, int limit) {
+        this.repo = repo;
         this.limit = limit;
     }
 
-    public MovieManager() {
-        this.limit = 10;
-    }
-
-
-    public void save(MovieItem item) {
-        MovieItem[] tmp = new MovieItem[items.length + 1];
-        for (int i = 0; i < items.length; i++) {
-            tmp[i] = items[i];
-        }
-        tmp[tmp.length - 1] = item;
-        items = tmp;
-    }
-
-    public MovieItem[] findAll() {
-        return items;
-    }
-
     public MovieItem[] findLast() {
-        MovieItem[] all = findAll();
+        MovieItem[] all = repo.findAll();
         int resultLength;
         if (getLimit() >= 0 && getLimit() < all.length) {
             resultLength = getLimit();

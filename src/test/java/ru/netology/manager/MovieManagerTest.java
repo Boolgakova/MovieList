@@ -1,11 +1,17 @@
 package ru.netology.manager;
 
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import ru.netology.domain.MovieItem;
+import ru.netology.repository.MovieRepository;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
-import ru.netology.domain.MovieItem;
+import static org.mockito.Mockito.*;
 
 public class MovieManagerTest {
+    MovieRepository repo = Mockito.mock(MovieRepository.class);
+    MovieManager manager = new MovieManager(repo);
 
     MovieItem item1 = new MovieItem(1, "Matrix");
     MovieItem item2 = new MovieItem(2, "Deadpool");
@@ -24,186 +30,72 @@ public class MovieManagerTest {
     MovieItem item15 = new MovieItem(15, "X-men");
 
     @Test
-    public void emptyList() {
-        MovieManager repo = new MovieManager();
-
-        MovieItem[] expected = {};
-        MovieItem[] actual = repo.findAll();
-
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldAddOne() {
-        MovieManager repo = new MovieManager();
-        repo.save(item1);
-
-        MovieItem[] expected = {item1};
-        MovieItem[] actual = repo.findAll();
-
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-
-    public void shouldAddSeveral() {
-        MovieManager repo = new MovieManager();
-        repo.save(item1);
-        repo.save(item3);
-        repo.save(item5);
-
-        MovieItem[] expected = {item1, item3, item5};
-        MovieItem[] actual = repo.findAll();
-
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
     public void shouldShowLimitByDefault() {
-        MovieManager repo = new MovieManager();
-        repo.save(item1);
-        repo.save(item2);
-        repo.save(item3);
-        repo.save(item4);
-        repo.save(item5);
-        repo.save(item6);
-        repo.save(item7);
-        repo.save(item8);
-        repo.save(item9);
-        repo.save(item10);
-        repo.save(item11);
-        repo.save(item12);
-        repo.save(item13);
-        repo.save(item14);
-        repo.save(item15);
+        MovieItem[] items = {item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15};
+        doReturn(items).when(repo).findAll();
 
         MovieItem[] expected = {item15, item14, item13, item12, item11, item10, item9, item8, item7, item6};
-        MovieItem[] actual = repo.findLast();
+        MovieItem[] actual = manager.findLast();
 
         assertArrayEquals(expected, actual);
     }
 
     @Test
     public void shouldShowLimitByParameters() {
-        MovieManager repo = new MovieManager(5);
-        repo.save(item1);
-        repo.save(item2);
-        repo.save(item3);
-        repo.save(item4);
-        repo.save(item5);
-        repo.save(item6);
-        repo.save(item7);
-        repo.save(item8);
-        repo.save(item9);
-        repo.save(item10);
-        repo.save(item11);
-        repo.save(item12);
-        repo.save(item13);
-        repo.save(item14);
-        repo.save(item15);
+        MovieManager manager = new MovieManager(repo, 5);
+        MovieItem[] items = {item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15};
+        doReturn(items).when(repo).findAll();
 
         MovieItem[] expected = {item15, item14, item13, item12, item11};
-        MovieItem[] actual = repo.findLast();
+        MovieItem[] actual = manager.findLast();
 
         assertArrayEquals(expected, actual);
     }
 
     @Test
     public void shouldShowLimitByParametersAboveLimit() {
-        MovieManager repo = new MovieManager(20);
-        repo.save(item1);
-        repo.save(item2);
-        repo.save(item3);
-        repo.save(item4);
-        repo.save(item5);
-        repo.save(item6);
-        repo.save(item7);
-        repo.save(item8);
-        repo.save(item9);
-        repo.save(item10);
-        repo.save(item11);
-        repo.save(item12);
-        repo.save(item13);
-        repo.save(item14);
-        repo.save(item15);
+        MovieManager manager = new MovieManager(repo, 20);
+        MovieItem[] items = {item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15};
+        doReturn(items).when(repo).findAll();
 
         MovieItem[] expected = {item15, item14, item13, item12, item11, item10, item9, item8, item7, item6, item5, item4, item3, item2, item1};
-        MovieItem[] actual = repo.findLast();
+        MovieItem[] actual = manager.findLast();
 
         assertArrayEquals(expected, actual);
     }
 
     @Test
     public void shouldShowLimitByNegativeParameters() {
-        MovieManager repo = new MovieManager(-3);
-        repo.save(item1);
-        repo.save(item2);
-        repo.save(item3);
-        repo.save(item4);
-        repo.save(item5);
-        repo.save(item6);
-        repo.save(item7);
-        repo.save(item8);
-        repo.save(item9);
-        repo.save(item10);
-        repo.save(item11);
-        repo.save(item12);
-        repo.save(item13);
-        repo.save(item14);
-        repo.save(item15);
+        MovieManager manager = new MovieManager(repo, -3);
+        MovieItem[] items = {item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15};
+        doReturn(items).when(repo).findAll();
 
         MovieItem[] expected = {item15, item14, item13, item12, item11, item10, item9, item8, item7, item6, item5, item4, item3, item2, item1};
-        MovieItem[] actual = repo.findLast();
+        MovieItem[] actual = manager.findLast();
 
         assertArrayEquals(expected, actual);
     }
 
     @Test
     public void shouldShowLimitByZeroParameter() {
-        MovieManager repo = new MovieManager(0);
-        repo.save(item1);
-        repo.save(item2);
-        repo.save(item3);
-        repo.save(item4);
-        repo.save(item5);
-        repo.save(item6);
-        repo.save(item7);
-        repo.save(item8);
-        repo.save(item9);
-        repo.save(item10);
-        repo.save(item11);
-        repo.save(item12);
-        repo.save(item13);
-        repo.save(item14);
-        repo.save(item15);
+        MovieManager manager = new MovieManager(repo, 0);
+        MovieItem[] items = {item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15};
+        doReturn(items).when(repo).findAll();
 
         MovieItem[] expected = {};
-        MovieItem[] actual = repo.findLast();
+        MovieItem[] actual = manager.findLast();
 
         assertArrayEquals(expected, actual);
     }
 
     @Test
     public void shouldShowLimitByParameterOne() {
-        MovieManager repo = new MovieManager(1);
-        repo.save(item1);
-        repo.save(item2);
-        repo.save(item3);
-        repo.save(item4);
-        repo.save(item5);
-        repo.save(item6);
-        repo.save(item7);
-        repo.save(item8);
-        repo.save(item9);
-        repo.save(item10);
-        repo.save(item11);
-        repo.save(item12);
-        repo.save(item13);
-        repo.save(item14);
-        repo.save(item15);
+        MovieManager manager = new MovieManager(repo, 1);
+        MovieItem[] items = {item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15};
+        doReturn(items).when(repo).findAll();
 
         MovieItem[] expected = {item15};
-        MovieItem[] actual = repo.findLast();
+        MovieItem[] actual = manager.findLast();
 
         assertArrayEquals(expected, actual);
     }
